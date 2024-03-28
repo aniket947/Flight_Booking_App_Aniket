@@ -1,0 +1,97 @@
+<div class="row">
+  <div class="col-md-12 searchToolbar">
+    <div class="col-md-4">
+
+      <mat-form-field class="searchBox">
+        <input matInput placeholder="Search Source" [(ngModel)]="originValue">
+      </mat-form-field>
+
+      <mat-form-field class="searchBox">
+        <input matInput placeholder="Search Destination" [(ngModel)]="destinationValue">
+      </mat-form-field>
+
+      <mat-form-field class="searchBox">
+        <input matInput placeholder="Choose a date" type="date" id="lastname" [(ngModel)]="departureDateValue">
+      </mat-form-field>
+
+      <button class="searchBtn" mat-flat-button color="primary" (click)="searchFlights()">Search</button>
+      <button mat-stroked-button color="primary" (click)="clearSearch()">Clear Search</button>
+
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field class="searchBox">
+          <mat-select (selectionChange)="filterAirlines(airline,airlineClass)" [(ngModel)]="airline"
+            placeholder="Select Airline">
+            <mat-option [value]="''">All</mat-option>
+            <mat-option *ngFor="let airline of airlinesData" [value]="airline"> {{airline}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select (selectionChange)="filterAirlines(airline,airlineClass)" [(ngModel)]="airlineClass"
+            placeholder="Select Class">
+            <mat-option [value]="''">All</mat-option>
+            <mat-option *ngFor="let airlineClass of airlinesClassData" [value]="airlineClass">
+              {{airlineClass}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showLoader" class="spinner__loading">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!showLoader" class="row">
+    <table mat-table [dataSource]="sortedData" class="mat-elevation-z8 demo-table" matSort
+      (matSortChange)="sortData($event)">
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Departure Date & Time</th>
+        <td mat-cell *matCellDef="let element">{{element.departureTime | date: 'dd/MM/yyyy HH:mm'}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="source">
+        <th mat-header-cell *matHeaderCellDef>Source</th>
+        <td mat-cell *matCellDef="let element">{{element.origin}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="destination">
+        <th mat-header-cell *matHeaderCellDef>Destination</th>
+        <td mat-cell *matCellDef="let element">{{element.destination}}</td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+        <td mat-cell *matCellDef="let element">{{element.price}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="airline">
+        <th mat-header-cell *matHeaderCellDef>Airline</th>
+        <td mat-cell *matCellDef="let element">{{element.airline}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="aircraft">
+        <th mat-header-cell *matHeaderCellDef>Class</th>
+        <td mat-cell *matCellDef="let element">{{element.aircraft}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="duration">
+        <th mat-header-cell *matHeaderCellDef>Duration</th>
+        <td mat-cell *matCellDef="let element">{{element.duration}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="seatsAvailable">
+        <th mat-header-cell *matHeaderCellDef>Available Seats</th>
+        <td mat-cell *matCellDef="let element">{{element.seatsAvailable}}</td>
+      </ng-container>
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>
